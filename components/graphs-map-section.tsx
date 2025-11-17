@@ -1,0 +1,226 @@
+'use client'
+
+import React from 'react'
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from 'recharts'
+import { SensorData } from '@/lib/loadCSVData'
+
+interface GraphsMapSectionProps {
+  allData: SensorData[]
+  currentIndex: number
+}
+
+export default function GraphsMapSection({ allData, currentIndex }: GraphsMapSectionProps) {
+  // Don't render if no data yet
+  if (!allData || allData.length === 0) {
+    return (
+      <div className="p-6" style={{ backgroundColor: '#0C0F16' }}>
+        <div className="text-center" style={{ color: '#00E0FF' }}>
+          Loading graph data...
+        </div>
+      </div>
+    )
+  }
+
+  // Show sliding window of data for smooth continuous display
+  const windowSize = 100 // Increased window for smoother visualization
+  const startIndex = Math.max(0, currentIndex - windowSize + 1)
+  const endIndex = currentIndex + 1
+  const recentData = allData.slice(startIndex, endIndex).map((d, i) => ({
+    time: startIndex + i,
+    altitude: d.altitude,
+    temperature: d.temperature,
+    pressure: d.pressure,
+    speed: d.speed,
+    tilt: d.tilt,
+    accelX: d.accelX,
+    accelY: d.accelY,
+    accelZ: d.accelZ,
+    gyroX: d.gyroX,
+    gyroY: d.gyroY,
+    gyroZ: d.gyroZ,
+    magX: d.magX,
+    magY: d.magY,
+    magZ: d.magZ,
+  }))
+
+  const SimpleChart = ({
+    title,
+    data,
+    dataKey,
+    color,
+    yAxisLabel,
+  }: {
+    title: string
+    data: any[]
+    dataKey: string
+    color: string
+    yAxisLabel: string
+  }) => (
+    <div
+      className="p-4 rounded-lg border-2"
+      style={{
+        backgroundColor: '#151A23',
+        borderColor: '#00E0FF',
+        boxShadow: '0 0 20px rgba(0, 224, 255, 0.1)',
+      }}
+    >
+      <h3 className="text-xs font-bold mb-3" style={{ color: '#00E0FF' }}>
+        {title}
+      </h3>
+      <ResponsiveContainer width="100%" height={150}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#00E0FF" opacity={0.1} />
+          <XAxis
+            dataKey="time"
+            tick={{ fill: '#00E0FF', fontSize: 12 }}
+            label={{ value: 'Time', position: 'insideBottom', offset: -5, fill: '#00E0FF', fontSize: 12 }}
+            domain={['dataMin', 'dataMax']}
+          />
+          <YAxis 
+            tick={{ fill: '#00E0FF', fontSize: 12 }}
+            label={{ value: yAxisLabel, angle: -90, position: 'insideLeft', fill: '#00E0FF', fontSize: 12 }}
+            domain={['auto', 'auto']}
+          />
+          <Tooltip
+            contentStyle={{
+              backgroundColor: '#0C0F16',
+              borderColor: '#00E0FF',
+              color: '#EAF1F7',
+            }}
+          />
+          <Line
+            type="monotone"
+            dataKey={dataKey}
+            stroke={color}
+            dot={false}
+            strokeWidth={2}
+            isAnimationActive={false}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  )
+
+  return (
+    <div className="p-6" style={{ backgroundColor: '#0C0F16' }}>
+      <div className="grid grid-cols-3 gap-4">
+        {/* Row 1: Altitude, Temperature, Pressure */}
+        <SimpleChart
+          title="ALTITUDE"
+          data={recentData}
+          dataKey="altitude"
+          color="#00E0FF"
+          yAxisLabel="Meters"
+        />
+        <SimpleChart
+          title="TEMPERATURE"
+          data={recentData}
+          dataKey="temperature"
+          color="#FFB84D"
+          yAxisLabel="°C"
+        />
+        <SimpleChart
+          title="PRESSURE"
+          data={recentData}
+          dataKey="pressure"
+          color="#FF4D4D"
+          yAxisLabel="hPa"
+        />
+
+        {/* Row 2: Speed and Accelerometer */}
+        <SimpleChart
+          title="SPEED"
+          data={recentData}
+          dataKey="speed"
+          color="#00FF88"
+          yAxisLabel="m/s"
+        />
+        <SimpleChart
+          title="ACCEL X"
+          data={recentData}
+          dataKey="accelX"
+          color="#00E0FF"
+          yAxisLabel="g"
+        />
+        <SimpleChart
+          title="ACCEL Y"
+          data={recentData}
+          dataKey="accelY"
+          color="#00FF88"
+          yAxisLabel="g"
+        />
+
+        {/* Row 3: Accelerometer Z, Gyroscope X, Y */}
+        <SimpleChart
+          title="ACCEL Z"
+          data={recentData}
+          dataKey="accelZ"
+          color="#FFB84D"
+          yAxisLabel="g"
+        />
+        <SimpleChart
+          title="GYRO X"
+          data={recentData}
+          dataKey="gyroX"
+          color="#00E0FF"
+          yAxisLabel="deg/s"
+        />
+        <SimpleChart
+          title="GYRO Y"
+          data={recentData}
+          dataKey="gyroY"
+          color="#00FF88"
+          yAxisLabel="deg/s"
+        />
+
+        {/* Row 4: Gyroscope Z, Magnetometer X, Y */}
+        <SimpleChart
+          title="GYRO Z"
+          data={recentData}
+          dataKey="gyroZ"
+          color="#FFB84D"
+          yAxisLabel="deg/s"
+        />
+        <SimpleChart
+          title="MAG X"
+          data={recentData}
+          dataKey="magX"
+          color="#00E0FF"
+          yAxisLabel="µT"
+        />
+        <SimpleChart
+          title="MAG Y"
+          data={recentData}
+          dataKey="magY"
+          color="#00FF88"
+          yAxisLabel="µT"
+        />
+
+        {/* Row 5: Magnetometer Z and Tilt */}
+        <SimpleChart
+          title="MAG Z"
+          data={recentData}
+          dataKey="magZ"
+          color="#FFB84D"
+          yAxisLabel="µT"
+        />
+        <SimpleChart
+          title="TILT"
+          data={recentData}
+          dataKey="tilt"
+          color="#FF4D4D"
+          yAxisLabel="degrees"
+        />
+      </div>
+    </div>
+  )
+}
