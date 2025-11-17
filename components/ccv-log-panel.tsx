@@ -44,16 +44,15 @@ export default function CCVLogPanel({ allData, currentIndex }: CCVLogPanelProps)
       className="w-64 flex flex-col border-r"
       style={{
         backgroundColor: '#0C0F16',
-        borderRightColor: '#00E0FF',
-        borderRightWidth: '2px',
+        borderRightColor: '#3a3f47',
       }}
     >
       {/* Header */}
-      <div className="p-4 border-b" style={{ borderBottomColor: '#00E0FF', borderBottomWidth: '1px' }}>
-        <h2 className="text-sm font-bold" style={{ color: '#00E0FF' }}>
+      <div className="p-4 border-b" style={{ borderBottomColor: '#3a3f47' }}>
+        <h2 className="text-sm font-bold" style={{ color: '#e5e7eb' }}>
           CCV LOG - Team {allData[0]?.teamId || 'XYZ'}
         </h2>
-        <p className="text-xs mt-1" style={{ color: '#00FF88' }}>
+        <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>
           MISSION TELEMETRY
         </p>
       </div>
@@ -62,11 +61,11 @@ export default function CCVLogPanel({ allData, currentIndex }: CCVLogPanelProps)
       <div
         ref={scrollContainerRef}
         className="flex-1 overflow-y-auto p-3 font-mono text-xs space-y-1"
-        style={{ color: '#00FF88' }}
+        style={{ color: '#9ca3af' }}
       >
         {visibleLogs.map((entry, idx) => {
-          const healthColor = entry.systemHealth === 'NOMINAL' ? '#00FF88' : 
-                             entry.systemHealth === 'WARNING' ? '#FFB84D' : '#FF4D4D'
+          const healthColor = entry.systemHealth === 'NOMINAL' ? '#10b981' : 
+                             entry.systemHealth === 'WARNING' ? '#f59e0b' : '#ef4444'
           
           return (
             <div key={idx} className="leading-relaxed">

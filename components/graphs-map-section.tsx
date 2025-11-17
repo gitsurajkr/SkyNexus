@@ -66,35 +66,35 @@ export default function GraphsMapSection({ allData, currentIndex }: GraphsMapSec
     yAxisLabel: string
   }) => (
     <div
-      className="p-4 rounded-lg border-2"
+      className="p-4 rounded-lg border"
       style={{
-        backgroundColor: '#151A23',
-        borderColor: '#00E0FF',
-        boxShadow: '0 0 20px rgba(0, 224, 255, 0.1)',
+        backgroundColor: '#1a1d23',
+        borderColor: '#3a3f47',
+        boxShadow: 'none',
       }}
     >
-      <h3 className="text-xs font-bold mb-3" style={{ color: '#00E0FF' }}>
+      <h3 className="text-xs font-bold mb-3" style={{ color: '#a0a4a8' }}>
         {title}
       </h3>
       <ResponsiveContainer width="100%" height={150}>
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#00E0FF" opacity={0.1} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#3a3f47" opacity={0.3} />
           <XAxis
             dataKey="time"
-            tick={{ fill: '#00E0FF', fontSize: 12 }}
-            label={{ value: 'Time', position: 'insideBottom', offset: -5, fill: '#00E0FF', fontSize: 12 }}
+            tick={{ fill: '#6b7280', fontSize: 11 }}
+            label={{ value: 'Time', position: 'insideBottom', offset: -5, fill: '#6b7280', fontSize: 11 }}
             domain={['dataMin', 'dataMax']}
           />
           <YAxis 
-            tick={{ fill: '#00E0FF', fontSize: 12 }}
-            label={{ value: yAxisLabel, angle: -90, position: 'insideLeft', fill: '#00E0FF', fontSize: 12 }}
+            tick={{ fill: '#6b7280', fontSize: 11 }}
+            label={{ value: yAxisLabel, angle: -90, position: 'insideLeft', fill: '#6b7280', fontSize: 11 }}
             domain={['auto', 'auto']}
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#0C0F16',
-              borderColor: '#00E0FF',
-              color: '#EAF1F7',
+              backgroundColor: '#1a1d23',
+              borderColor: '#3a3f47',
+              color: '#e5e7eb',
             }}
           />
           <Line

@@ -22,9 +22,9 @@ export default function CameraFeeds() {
     <div
       className="rounded-xl overflow-hidden border-2 relative group"
       style={{
-        backgroundColor: '#151A23',
-        borderColor: '#00E0FF',
-        boxShadow: '0 0 30px rgba(0, 224, 255, 0.15)',
+        backgroundColor: '#1a1d23',
+        borderColor: '#3a3f47',
+        boxShadow: 'none',
       }}
     >
       {/* Camera Feed */}
@@ -39,7 +39,7 @@ export default function CameraFeeds() {
             backgroundColor: '#0C0F16',
           }}
         >
-          <Camera size={48} style={{ color: '#00E0FF', opacity: 0.5 }} />
+          <Camera size={48} style={{ color: '#6b7280', opacity: 0.5 }} />
         </div>
 
         {/* Overlay Info */}
@@ -48,7 +48,7 @@ export default function CameraFeeds() {
           <div className="flex items-center gap-2">
             <span
               className="text-xs font-bold px-2 py-1 rounded"
-              style={{ backgroundColor: '#00E0FF', color: '#0C0F16' }}
+              style={{ backgroundColor: '#3a3f47', color: '#f9fafb' }}
             >
               {label}
             </span>
@@ -60,9 +60,9 @@ export default function CameraFeeds() {
             className="text-xs font-mono space-y-1"
             style={{ backgroundColor: 'rgba(0, 0, 0, 0.7)', padding: '8px', borderRadius: '4px' }}
           >
-            <p style={{ color: '#00E0FF' }}>FPS: {fpsValue}</p>
-            <p style={{ color: '#00E0FF' }}>RTL: {latencyValue}ms</p>
-            <p style={{ color: '#00FF88' }}>{timestamp}</p>
+            <p style={{ color: '#9ca3af' }}>FPS: {fpsValue}</p>
+            <p style={{ color: '#9ca3af' }}>RTL: {latencyValue}ms</p>
+            <p style={{ color: '#d1d5db' }}>{timestamp}</p>
           </div>
         </div>
 
@@ -70,13 +70,13 @@ export default function CameraFeeds() {
         <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <button
             className="p-2 rounded"
-            style={{ backgroundColor: 'rgba(0, 224, 255, 0.2)', color: '#00E0FF' }}
+            style={{ backgroundColor: 'rgba(58, 63, 71, 0.5)', color: '#d1d5db' }}
           >
             <Download size={16} />
           </button>
           <button
             className="p-2 rounded"
-            style={{ backgroundColor: 'rgba(0, 224, 255, 0.2)', color: '#00E0FF' }}
+            style={{ backgroundColor: 'rgba(58, 63, 71, 0.5)', color: '#d1d5db' }}
           >
             <Maximize2 size={16} />
           </button>
@@ -86,7 +86,7 @@ export default function CameraFeeds() {
   )
 
   return (
-    <div className="grid grid-cols-2 gap-6 p-6" style={{ backgroundColor: '#0C0F16' }}>
+    <div className="grid grid-cols-2 gap-6 p-6" style={{ backgroundColor: '#0f1117' }}>
       <CameraCard
         label="Primary Camera"
         fps={fps.cam_a}

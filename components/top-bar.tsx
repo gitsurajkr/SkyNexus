@@ -24,21 +24,20 @@ export default function TopBar({
     <div
       className="h-16 flex items-center justify-between px-6 border-b"
       style={{
-        backgroundColor: '#151A23',
-        borderBottomColor: '#00E0FF',
-        borderBottomWidth: '1px',
+        backgroundColor: '#1a1d23',
+        borderBottomColor: '#3a3f47',
       }}
     >
       {/* Left: Title + Status */}
       <div className="flex items-center gap-3">
         <div>
-          <h1 className="text-xl font-bold" style={{ color: '#EAF1F7' }}>
+          <h1 className="text-xl font-bold" style={{ color: '#f9fafb' }}>
             Team Aerius
           </h1>
         </div>
         <div className="flex items-center gap-2 ml-4">
           {/* <div className={`w-3 h-3 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`} /> */}
-          <span className="text-xs" style={{ color: '#EAF1F7' }}>
+          <span className="text-xs" style={{ color: '#9ca3af' }}>
             {isConnected ? '🟢 Connected' : '🔴 Disconnected'}
           </span>
         </div>

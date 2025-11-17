@@ -30,29 +30,29 @@ export default function MetricsRow({ currentData }: MetricsRowProps) {
     icon: React.ReactNode
   }) => (
     <div
-      className="p-4 rounded-lg border-2 transition-all duration-300"
+      className="p-4 rounded-lg border transition-all duration-300"
       style={{
-        backgroundColor: '#151A23',
-        borderColor: '#00E0FF',
-        boxShadow: '0 0 20px rgba(0, 224, 255, 0.2)',
+        backgroundColor: '#1a1d23',
+        borderColor: '#3a3f47',
+        boxShadow: 'none',
       }}
     >
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-bold" style={{ color: '#00E0FF' }}>
+        <span className="text-xs font-bold" style={{ color: '#9ca3af' }}>
           {title}
         </span>
-        <div style={{ color: '#00E0FF' }}>{Icon}</div>
+        <div style={{ color: '#6b7280' }}>{Icon}</div>
       </div>
       <div className="flex items-baseline gap-1">
-        <span className="text-3xl font-bold" style={{ color: '#EAF1F7' }}>
+        <span className="text-3xl font-bold" style={{ color: '#f9fafb' }}>
           {typeof value === 'number' ? value.toFixed(1) : value}
         </span>
-        <span className="text-xs" style={{ color: '#00E0FF' }}>
+        <span className="text-xs" style={{ color: '#9ca3af' }}>
           {unit}
         </span>
       </div>
       {subtext && (
-        <p className="text-xs mt-2" style={{ color: '#00E0FF', opacity: 0.7 }}>
+        <p className="text-xs mt-2" style={{ color: '#6b7280' }}>
           {subtext}
         </p>
       )}
