@@ -1,6 +1,4 @@
 'use client'
-
-import React from 'react'
 import { convertToCSV, SensorData } from '@/lib/loadCSVData'
 import { Download } from 'lucide-react'
 
@@ -23,16 +21,9 @@ export default function ExportCSVButton({ allData }: ExportCSVButtonProps) {
   return (
     <button
       onClick={handleExport}
-      className="flex items-center gap-2 px-4 py-2 rounded-lg border-2 transition-all duration-300 hover:opacity-80"
-      style={{
-        backgroundColor: '#151A23',
-        borderColor: '#00E0FF',
-        color: '#00E0FF',
-        boxShadow: '0 0 20px rgba(0, 224, 255, 0.2)',
-      }}
-    >
-      <Download size={16} />
-      <span className="text-xs font-bold">EXPORT CSV</span>
+      className="flex items-center gap-2 px-6 py-2 rounded-md border-2 bg-blue-600 border-blue-700 text-white hover:bg-blue-700 transition-colors font-medium">
+      <Download size={14} />
+      <span className="text-sm font-semibold">Export</span>
     </button>
   )
 }

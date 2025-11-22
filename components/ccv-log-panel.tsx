@@ -21,38 +21,24 @@ export default function CCVLogPanel({ allData, currentIndex }: CCVLogPanelProps)
   // Don't render if no data
   if (!allData || allData.length === 0) {
     return (
-      <div
-        className="w-64 flex flex-col border-r"
-        style={{
-          backgroundColor: '#0C0F16',
-          borderRightColor: '#00E0FF',
-          borderRightWidth: '2px',
-        }}
-      >
-        <div className="p-4 text-center" style={{ color: '#00E0FF' }}>
+      <div className="w-64 flex flex-col border-r-2 bg-white border-r-gray-300">
+        <div className="p-4 text-center text-gray-600">
           Loading logs...
         </div>
       </div>
     )
   }
 
-  // Get visible logs (current and past entries)
   const visibleLogs = allData.slice(0, currentIndex + 1).slice(-50) // Show last 50 entries
 
   return (
-    <div
-      className="w-64 flex flex-col border-r"
-      style={{
-        backgroundColor: '#0C0F16',
-        borderRightColor: '#3a3f47',
-      }}
-    >
+    <div className="w-64 flex flex-col border-r-2 bg-white border-r-gray-300">
       {/* Header */}
-      <div className="p-4 border-b" style={{ borderBottomColor: '#3a3f47' }}>
-        <h2 className="text-sm font-bold" style={{ color: '#e5e7eb' }}>
+      <div className="p-4 border-b border-b-gray-300">
+        <h2 className="text-sm font-bold text-gray-900">
           CCV LOG - Team {allData[0]?.teamId || 'XYZ'}
         </h2>
-        <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>
+        <p className="text-xs mt-1 text-gray-600">
           MISSION TELEMETRY
         </p>
       </div>
@@ -60,8 +46,7 @@ export default function CCVLogPanel({ allData, currentIndex }: CCVLogPanelProps)
       {/* Log Container */}
       <div
         ref={scrollContainerRef}
-        className="flex-1 overflow-y-auto p-3 font-mono text-xs space-y-1"
-        style={{ color: '#9ca3af' }}
+        className="flex-1 overflow-y-auto p-3 font-mono text-xs space-y-1 text-gray-800"
       >
         {visibleLogs.map((entry, idx) => {
           const healthColor = entry.systemHealth === 'NOMINAL' ? '#10b981' : 

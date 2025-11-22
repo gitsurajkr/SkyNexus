@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react'
-import { Activity, Thermometer, Navigation, Gauge } from 'lucide-react'
+import { Activity, Thermometer, Navigation, Gauge, Zap } from 'lucide-react'
 import { SensorData } from '@/lib/loadCSVData'
 
 interface MetricsRowProps {
@@ -15,6 +15,7 @@ export default function MetricsRow({ currentData }: MetricsRowProps) {
   const temperature = currentData.temperature
   const speed = currentData.speed
   const tilt = currentData.tilt
+  const voltage = currentData.voltage
 
   const MetricCard = ({
     title,
@@ -29,30 +30,23 @@ export default function MetricsRow({ currentData }: MetricsRowProps) {
     subtext?: string
     icon: React.ReactNode
   }) => (
-    <div
-      className="p-4 rounded-lg border transition-all duration-300"
-      style={{
-        backgroundColor: '#1a1d23',
-        borderColor: '#3a3f47',
-        boxShadow: 'none',
-      }}
-    >
+    <div className="p-4 rounded-lg border bg-white border-gray-300 transition-all duration-300 shadow-sm">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-bold" style={{ color: '#9ca3af' }}>
+        <span className="text-xs font-bold text-gray-600">
           {title}
         </span>
-        <div style={{ color: '#6b7280' }}>{Icon}</div>
+        <div className="text-gray-500">{Icon}</div>
       </div>
       <div className="flex items-baseline gap-1">
-        <span className="text-3xl font-bold" style={{ color: '#f9fafb' }}>
+        <span className="text-3xl font-bold text-gray-900">
           {typeof value === 'number' ? value.toFixed(1) : value}
         </span>
-        <span className="text-xs" style={{ color: '#9ca3af' }}>
+        <span className="text-xs text-gray-600">
           {unit}
         </span>
       </div>
       {subtext && (
-        <p className="text-xs mt-2" style={{ color: '#6b7280' }}>
+        <p className="text-xs mt-2 text-gray-500">
           {subtext}
         </p>
       )}
@@ -60,7 +54,7 @@ export default function MetricsRow({ currentData }: MetricsRowProps) {
   )
 
   return (
-    <div className="grid grid-cols-4 gap-4 p-6" style={{ backgroundColor: '#0C0F16' }}>
+    <div className="grid grid-cols-5 gap-4 p-6 bg-gray-50">
       <MetricCard
         title="ALTITUDE"
         value={altitude}
@@ -73,6 +67,13 @@ export default function MetricsRow({ currentData }: MetricsRowProps) {
         unit="°C"
         subtext={`Pressure: ${currentData.pressure.toFixed(1)} hPa`}
         icon={<Thermometer size={20} />}
+      />
+      <MetricCard
+        title="VOLTAGE"
+        value={voltage}
+        unit="V"
+        subtext={`Battery level`}
+        icon={<Zap size={20} />}
       />
       <MetricCard
         title="SPEED"

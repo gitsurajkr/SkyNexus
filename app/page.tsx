@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import CCVLogPanel from '@/components/ccv-log-panel'
 import TopBar from '@/components/top-bar'
 import MetricsRow from '@/components/metrics-row'
-import CameraFeeds from '@/components/camera-feeds'
+// import CameraFeeds from '@/components/camera-feeds'
 import GraphsMapSection from '@/components/graphs-map-section'
 import BottomPanel from '@/components/bottom-panel'
 import { loadCSVData, convertToCSV, SensorData } from '@/lib/loadCSVData'
@@ -26,7 +26,7 @@ export default function CanSatDashboard() {
     loadCSVData().then(data => {
       setAllData(data)
       setIsLoading(false)
-      console.log(`✅ Loaded ${data.length} entries from CSV file`)
+      console.log(`Loaded ${data.length} entries from CSV file`)
     }).catch(error => {
       console.error('Error loading CSV:', error)
       setIsLoading(false)
@@ -56,12 +56,12 @@ export default function CanSatDashboard() {
 
   if (isLoading) {
     return (
-      <div className="flex h-screen w-full items-center justify-center" style={{ backgroundColor: '#0C0F16' }}>
+      <div className="flex h-screen w-full items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="text-2xl font-bold mb-4" style={{ color: '#00E0FF' }}>
+          <div className="text-2xl font-bold mb-4 text-gray-800">
             Loading Telemetry Data...
           </div>
-          <div className="text-sm" style={{ color: '#00FF88' }}>
+          <div className="text-sm text-gray-600">
             Reading CSV file
           </div>
         </div>
@@ -70,8 +70,7 @@ export default function CanSatDashboard() {
   }
 
   return (
-    <div className="flex h-screen w-full overflow-hidden" style={{ backgroundColor: '#0C0F16' }}>
-      {/* Left CCV Log Panel */}
+    <div className="flex h-screen w-full overflow-hidden bg-gray-50">
       <CCVLogPanel allData={allData} currentIndex={currentIndex} />
 
       {/* Right Main Content */}
@@ -86,12 +85,12 @@ export default function CanSatDashboard() {
         />
 
         {/* Scrollable Main Content */}
-        <div className="flex-1 overflow-y-auto" style={{ backgroundColor: '#0C0F16' }}>
+        <div className="flex-1 overflow-y-auto bg-gray-50">
           {/* Metrics Row */}
           <MetricsRow currentData={currentData} />
 
           {/* Camera Feeds */}
-          <CameraFeeds />
+          {/* <CameraFeeds /> */}
 
           {/* Graphs + Map Section */}
           <GraphsMapSection allData={allData} currentIndex={currentIndex} />

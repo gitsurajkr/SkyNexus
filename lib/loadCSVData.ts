@@ -6,6 +6,8 @@ export interface SensorData {
   pressure: number;
   speed: number;
   tilt: number;
+  voltage: number;
+  current: number;
   accelX: number;
   accelY: number;
   accelZ: number;
@@ -41,17 +43,19 @@ export async function loadCSVData(): Promise<SensorData[]> {
       pressure: parseFloat(values[4]),
       speed: parseFloat(values[5]),
       tilt: parseFloat(values[6]),
-      accelX: parseFloat(values[7]),
-      accelY: parseFloat(values[8]),
-      accelZ: parseFloat(values[9]),
-      gyroX: parseFloat(values[10]),
-      gyroY: parseFloat(values[11]),
-      gyroZ: parseFloat(values[12]),
-      magX: parseFloat(values[13]),
-      magY: parseFloat(values[14]),
-      magZ: parseFloat(values[15]),
-      systemHealth: values[16],
-      eventLog: values[17] || '',
+      voltage: parseFloat(values[7]),
+      current: parseFloat(values[8]),
+      accelX: parseFloat(values[9]),
+      accelY: parseFloat(values[10]),
+      accelZ: parseFloat(values[11]),
+      gyroX: parseFloat(values[12]),
+      gyroY: parseFloat(values[13]),
+      gyroZ: parseFloat(values[14]),
+      magX: parseFloat(values[15]),
+      magY: parseFloat(values[16]),
+      magZ: parseFloat(values[17]),
+      systemHealth: values[18],
+      eventLog: values[19] || '',
     });
   }
   
@@ -67,6 +71,8 @@ export function convertToCSV(data: SensorData[]): string {
     'Pressure(hPa)',
     'Speed(m/s)',
     'Tilt(deg)',
+    'Voltage(V)',
+    'Current(A)',
     'AccelX(g)',
     'AccelY(g)',
     'AccelZ(g)',
@@ -88,6 +94,8 @@ export function convertToCSV(data: SensorData[]): string {
     d.pressure.toFixed(2),
     d.speed.toFixed(2),
     d.tilt.toFixed(2),
+    d.voltage.toFixed(2),
+    d.current.toFixed(2),
     d.accelX.toFixed(3),
     d.accelY.toFixed(3),
     d.accelZ.toFixed(3),

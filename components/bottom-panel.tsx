@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { AlertCircle, CheckCircle2, AlertTriangle } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { CheckCircle2, AlertTriangle } from 'lucide-react'
 
 export default function BottomPanel() {
   const [sensors, setSensors] = useState({
@@ -48,15 +48,15 @@ export default function BottomPanel() {
     value: number
     unit: string
   }) => (
-    <tr className="border-b" style={{ borderBottomColor: '#3a3f47', borderBottomWidth: '0.5px' }}>
-      <td className="py-2 text-xs" style={{ color: '#9ca3af' }}>
+    <tr className="border-b border-gray-300">
+      <td className="py-2 text-xs text-gray-600">
         {label}
       </td>
-      <td className="py-2 text-xs font-mono text-right" style={{ color: '#f9fafb' }}>
+      <td className="py-2 text-xs font-mono text-right text-gray-900">
         {value.toFixed(2)} {unit}
       </td>
       <td className="py-2 pl-3">
-        <CheckCircle2 size={14} style={{ color: '#10b981' }} />
+        <CheckCircle2 size={14} className="text-green-600" />
       </td>
     </tr>
   )
@@ -70,18 +70,18 @@ export default function BottomPanel() {
     value: string | number
     isGood: boolean
   }) => (
-    <div className="flex items-center justify-between p-2 rounded" style={{ backgroundColor: 'rgba(58, 63, 71, 0.2)' }}>
-      <span className="text-xs" style={{ color: '#9ca3af' }}>
+    <div className="flex items-center justify-between p-2 rounded bg-gray-100">
+      <span className="text-xs text-gray-600">
         {label}
       </span>
       <div className="flex items-center gap-2">
-        <span className="text-xs font-bold" style={{ color: '#f9fafb' }}>
+        <span className="text-xs font-bold text-gray-900">
           {value}
         </span>
         {isGood ? (
-          <CheckCircle2 size={14} style={{ color: '#10b981' }} />
+          <CheckCircle2 size={14} className="text-green-600" />
         ) : (
-          <AlertTriangle size={14} style={{ color: '#f59e0b' }} />
+          <AlertTriangle size={14} className="text-amber-600" />
         )}
       </div>
     </div>
@@ -97,13 +97,13 @@ export default function BottomPanel() {
     message: string
   }) => {
     const colors = {
-      info: '#9ca3af',
-      warning: '#f59e0b',
-      error: '#ef4444',
+      info: '#6b7280',
+      warning: '#d97706',
+      error: '#dc2626',
     }
 
     return (
-      <div className="py-2 border-b" style={{ borderBottomColor: '#3a3f47', borderBottomWidth: '0.5px' }}>
+      <div className="py-2 border-b border-gray-300">
         <p className="text-xs" style={{ color: colors[level] }}>
           <span className="font-mono">[{time}]</span> {message}
         </p>
@@ -112,18 +112,10 @@ export default function BottomPanel() {
   }
 
   return (
-    <div className="p-6" style={{ backgroundColor: '#0f1117' }}>
+    <div className="p-6 bg-gray-50">
       <div className="grid grid-cols-3 gap-6 mb-6">
-        {/* Sensors Table */}
-        <div
-          className="rounded-lg border-2 p-4"
-          style={{
-            backgroundColor: '#1a1d23',
-            borderColor: '#3a3f47',
-            boxShadow: 'none',
-          }}
-        >
-          <h3 className="text-xs font-bold mb-3" style={{ color: '#d1d5db' }}>
+        <div className="rounded-lg border-2 p-4 bg-white border-gray-300 shadow-sm">
+          <h3 className="text-xs font-bold mb-3 text-gray-700">
             SENSOR DATA
           </h3>
           <div className="overflow-x-auto">
@@ -143,15 +135,8 @@ export default function BottomPanel() {
         </div>
 
         {/* System Health */}
-        <div
-          className="rounded-lg border-2 p-4"
-          style={{
-            backgroundColor: '#1a1d23',
-            borderColor: '#3a3f47',
-            boxShadow: 'none',
-          }}
-        >
-          <h3 className="text-xs font-bold mb-3" style={{ color: '#d1d5db' }}>
+        <div className="rounded-lg border-2 p-4 bg-white border-gray-300 shadow-sm">
+          <h3 className="text-xs font-bold mb-3 text-gray-700">
             SYSTEM HEALTH
           </h3>
           <div className="space-y-2">
@@ -166,16 +151,8 @@ export default function BottomPanel() {
           </div>
         </div>
 
-        {/* Event Log */}
-        <div
-          className="rounded-lg border-2 p-4"
-          style={{
-            backgroundColor: '#1a1d23',
-            borderColor: '#3a3f47',
-            boxShadow: 'none',
-          }}
-        >
-          <h3 className="text-xs font-bold mb-3" style={{ color: '#d1d5db' }}>
+        <div className="rounded-lg border-2 p-4 bg-white border-gray-300 shadow-sm">
+          <h3 className="text-xs font-bold mb-3 text-gray-700">
             EVENT LOG
           </h3>
           <div className="max-h-48 overflow-y-auto">

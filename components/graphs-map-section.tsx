@@ -22,8 +22,8 @@ export default function GraphsMapSection({ allData, currentIndex }: GraphsMapSec
   // Don't render if no data yet
   if (!allData || allData.length === 0) {
     return (
-      <div className="p-6" style={{ backgroundColor: '#0C0F16' }}>
-        <div className="text-center" style={{ color: '#00E0FF' }}>
+      <div className="p-6 bg-gray-50">
+        <div className="text-center text-gray-600">
           Loading graph data...
         </div>
       </div>
@@ -41,6 +41,8 @@ export default function GraphsMapSection({ allData, currentIndex }: GraphsMapSec
     pressure: d.pressure,
     speed: d.speed,
     tilt: d.tilt,
+    voltage: d.voltage,
+    current: d.current,
     accelX: d.accelX,
     accelY: d.accelY,
     accelZ: d.accelZ,
@@ -65,20 +67,13 @@ export default function GraphsMapSection({ allData, currentIndex }: GraphsMapSec
     color: string
     yAxisLabel: string
   }) => (
-    <div
-      className="p-4 rounded-lg border"
-      style={{
-        backgroundColor: '#1a1d23',
-        borderColor: '#3a3f47',
-        boxShadow: 'none',
-      }}
-    >
-      <h3 className="text-xs font-bold mb-3" style={{ color: '#a0a4a8' }}>
+    <div className="p-4 rounded-lg border bg-white border-gray-300 shadow-sm">
+      <h3 className="text-xs font-bold mb-3 text-gray-700">
         {title}
       </h3>
       <ResponsiveContainer width="100%" height={150}>
         <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#3a3f47" opacity={0.3} />
+          <CartesianGrid strokeDasharray="3 3" stroke="#d1d5db" opacity={0.5} />
           <XAxis
             dataKey="time"
             tick={{ fill: '#6b7280', fontSize: 11 }}
@@ -92,9 +87,9 @@ export default function GraphsMapSection({ allData, currentIndex }: GraphsMapSec
           />
           <Tooltip
             contentStyle={{
-              backgroundColor: '#1a1d23',
-              borderColor: '#3a3f47',
-              color: '#e5e7eb',
+              backgroundColor: '#ffffff',
+              borderColor: '#d1d5db',
+              color: '#1f2937',
             }}
           />
           <Line
@@ -111,7 +106,7 @@ export default function GraphsMapSection({ allData, currentIndex }: GraphsMapSec
   )
 
   return (
-    <div className="p-6" style={{ backgroundColor: '#0C0F16' }}>
+    <div className="p-6 bg-gray-50">
       <div className="grid grid-cols-3 gap-4">
         {/* Row 1: Altitude, Temperature, Pressure */}
         <SimpleChart
@@ -143,6 +138,27 @@ export default function GraphsMapSection({ allData, currentIndex }: GraphsMapSec
           dataKey="speed"
           color="#00FF88"
           yAxisLabel="m/s"
+        />
+         <SimpleChart
+          title="TILT"
+          data={recentData}
+          dataKey="tilt"
+          color="#FF4D4D"
+          yAxisLabel="degrees"
+        />
+        <SimpleChart
+          title="VOLTAGE"
+          data={recentData}
+          dataKey="voltage"
+          color="#10b981"
+          yAxisLabel="V"
+        />
+        <SimpleChart
+          title="CURRENT"
+          data={recentData}
+          dataKey="current"
+          color="#3b82f6"
+          yAxisLabel="A"
         />
         <SimpleChart
           title="ACCEL X"
@@ -205,7 +221,7 @@ export default function GraphsMapSection({ allData, currentIndex }: GraphsMapSec
           yAxisLabel="µT"
         />
 
-        {/* Row 5: Magnetometer Z and Tilt */}
+        {/* Row 5: Magnetometer Z, Tilt, and Voltage */}
         <SimpleChart
           title="MAG Z"
           data={recentData}
@@ -213,13 +229,7 @@ export default function GraphsMapSection({ allData, currentIndex }: GraphsMapSec
           color="#FFB84D"
           yAxisLabel="µT"
         />
-        <SimpleChart
-          title="TILT"
-          data={recentData}
-          dataKey="tilt"
-          color="#FF4D4D"
-          yAxisLabel="degrees"
-        />
+       
       </div>
     </div>
   )

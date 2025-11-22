@@ -51,6 +51,15 @@ function generateMockData(count = 250) {
     const temperature = 25 - (altitude / 3000) * 15 + (Math.random() - 0.5) * 2;
     const pressure = 1013.25 * Math.exp(-altitude / 8500) + (Math.random() - 0.5) * 5;
     
+    // Battery voltage: starts at 12.6V, gradually decreases with flight time
+    const batteryDrain = (i / count) * 1.5; // Drains ~1.5V over entire mission
+    const voltage = (12.6 - batteryDrain + (Math.random() - 0.5) * 0.1).toFixed(2);
+    
+    // Current draw: varies with system activity, 0.5A to 2.5A
+    const baseCurrent = 1.2; // Base current draw
+    const activityCurrent = flightPhase < 0.3 || flightPhase > 0.7 ? 0.8 : 0.3; // Higher during launch/landing
+    const current = (baseCurrent + activityCurrent + (Math.random() - 0.5) * 0.4).toFixed(2);
+    
     data.push({
       timestamp: time.toISOString(),
       teamId: 'XYZ',
@@ -59,6 +68,8 @@ function generateMockData(count = 250) {
       pressure: pressure.toFixed(2),
       speed: Math.abs(speed).toFixed(2),
       tilt: (Math.random() * 15 + (flightPhase > 0.5 ? Math.random() * 10 : 0)).toFixed(2),
+      voltage: voltage,
+      current: current,
       accelX: ((Math.random() - 0.5) * 2).toFixed(3),
       accelY: ((Math.random() - 0.5) * 2).toFixed(3),
       accelZ: accelZ.toFixed(3),
@@ -85,6 +96,8 @@ function convertToCSV(data) {
     'Pressure(hPa)',
     'Speed(m/s)',
     'Tilt(deg)',
+    'Voltage(V)',
+    'Current(A)',
     'AccelX(g)',
     'AccelY(g)',
     'AccelZ(g)',
@@ -106,6 +119,8 @@ function convertToCSV(data) {
     d.pressure,
     d.speed,
     d.tilt,
+    d.voltage,
+    d.current,
     d.accelX,
     d.accelY,
     d.accelZ,
