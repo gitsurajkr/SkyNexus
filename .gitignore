@@ -39,3 +39,39 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Electron and packaging
+/dist-electron/
+/electron/dist/
+/electron/out/
+
+# Electron build cache and temporary
+/.cache/
+
+# Editor directories and files
+.vscode/
+.idea/
+*.sublime-workspace
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Local environment overrides
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# npm pack
+*.tgz
+
+# Ignore compiled JavaScript in electron source dir
+electron/**/*.js
+electron/**/*.js.map

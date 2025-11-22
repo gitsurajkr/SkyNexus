@@ -21,7 +21,7 @@ export default function TopBar({
 }: TopBarProps) {
   return (
     <div className="h-16 flex items-center justify-between px-6 border-b bg-white border-gray-300">
-      {/* Left: Title + Status */}
+      {/* Title + Status */}
       <div className="flex items-center gap-3">
         <div>
           <h1 className="text-xl font-bold text-gray-900">
