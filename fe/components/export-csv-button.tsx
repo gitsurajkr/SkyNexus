@@ -1,5 +1,5 @@
 'use client'
-import { convertToCSV, SensorData } from '@/lib/loadCSVData'
+import { convertToCSV, SensorData } from '@/lib/sensorData'
 import { Download } from 'lucide-react'
 
 interface ExportCSVButtonProps {
@@ -13,7 +13,8 @@ export default function ExportCSVButton({ allData }: ExportCSVButtonProps) {
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `cansat-telemetry-Team${allData[0]?.teamId || 'XYZ'}-${new Date().toISOString().split('T')[0]}.csv`
+    // Filename format per spec: Flight_<TEAM_ID>.csv
+    link.download = `Flight_${allData[0]?.TEAM_ID || '1000'}.csv`
     link.click()
     URL.revokeObjectURL(url)
   }

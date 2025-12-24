@@ -1,0 +1,21 @@
+{
+  "name": "simulator",
+  "version": "1.0.0",
+  "description": "CanSat Telemetry WebSocket Simulator",
+  "main": "dist/server.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsc && node dist/server.js"
+  },
+  "keywords": ["cansat", "telemetry", "websocket"],
+  "author": "Team Aerius",
+  "license": "ISC",
+  "dependencies": {
+    "@types/node": "^24.10.1",
+    "@types/ws": "^8.18.1",
+    "typescript": "^5.9.3",
+    "ws": "^8.18.3"
+  }
+}

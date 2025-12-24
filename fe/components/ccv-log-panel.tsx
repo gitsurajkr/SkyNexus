@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useRef, useEffect } from 'react'
-import { SensorData } from '@/lib/loadCSVData'
+import { SensorData } from '@/lib/sensorData'
 
 interface CCVLogPanelProps {
   allData: SensorData[]
@@ -36,7 +36,7 @@ export default function CCVLogPanel({ allData, currentIndex }: CCVLogPanelProps)
       {/* Header */}
       <div className="p-4 border-b border-b-gray-300">
         <h2 className="text-sm font-bold text-gray-900">
-          CCV LOG - Team {allData[0]?.teamId || 'XYZ'}
+          CCV LOG - Team {allData[0]?.TEAM_ID || 'XYZ'}
         </h2>
         <p className="text-xs mt-1 text-gray-600">
           MISSION TELEMETRY
@@ -49,27 +49,33 @@ export default function CCVLogPanel({ allData, currentIndex }: CCVLogPanelProps)
         className="flex-1 overflow-y-auto p-3 font-mono text-xs space-y-1 text-gray-800"
       >
         {visibleLogs.map((entry, idx) => {
-          const healthColor = entry.systemHealth === 'NOMINAL' ? '#10b981' : 
-                             entry.systemHealth === 'WARNING' ? '#f59e0b' : '#ef4444'
+          // Skip if entry doesn't have required fields
+          if (!entry || typeof entry.ALTITUDE === 'undefined' || typeof entry.TEMPERATURE === 'undefined') {
+            return null
+          }
+          
+          // Color based on STATE
+          const stateColor = 
+            entry.STATE === 'LANDED' ? '#10b981' : 
+            entry.STATE === 'ASCENT' ? '#3b82f6' : 
+            entry.STATE === 'DESCENT' ? '#f59e0b' : 
+            entry.STATE === 'APOGEE' ? '#8b5cf6' :
+            entry.STATE === 'PROBE_RELEASE' ? '#ec4899' :
+            entry.STATE === 'PAYLOAD_RELEASE' ? '#f97316' :
+            '#6b7280'
           
           return (
             <div key={idx} className="leading-relaxed">
-              <span style={{ color: healthColor }}>
-                {entry.systemHealth}:
+              <span style={{ color: stateColor }}>
+                [{entry.MISSION_TIME || '00:00:00'}]
               </span>
               {' '}
-              <span>Team {entry.teamId}, Temp: {entry.temperature.toFixed(1)}°C</span>
-              {entry.eventLog && (
-                <>
-                  {' - '}
-                  <span>{entry.eventLog}</span>
-                </>
-              )}
+              <span>Team {entry.TEAM_ID}, Temp: {entry.TEMPERATURE.toFixed(1)}°C</span>
             </div>
           )
         })}
       </div>
-
+                    
       {/* Footer */}
       {/* <div className="p-3 border-t" style={{ borderTopColor: '#00E0FF', borderTopWidth: '1px' }}>
         <p className="text-xs" style={{ color: '#00E0FF' }}>
