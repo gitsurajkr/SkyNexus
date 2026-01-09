@@ -30,7 +30,7 @@
 #include <TinyGPSPlus.h>
 #define DEBUG_SERIAL Serial
 #define RADIO_SERIAL Serial2
-/* ================= FSM ================= */
+// FSM 
 enum State
 {
   LAUNCH_PAD,
@@ -49,7 +49,7 @@ State currentState = LAUNCH_PAD;
 TinyGPSPlus gps;
 char missionTimeStr[9] = "NA";
 
-/* ================= BAROMETER ================= */
+// BAROMETER
 float P0;
 float altitudeFiltered = 0;
 float prevAltitude = 0;
@@ -58,22 +58,27 @@ float maxAltitude = 0;
 int apogeeCount = 0;
 bool payloadReleased = false;
 bool eggReleased = false;
+unsigned long apogeeDetectedTime = 0;
 
 unsigned long packetCount = 0;
 bool telemetryEnabled = false;
 char lastCommand = '\0';
 
-char readCommandFromAny() {
-  if (Serial.available()) {
-    return Serial.read();      // USB
+char readCommandFromAny()
+{
+  if (Serial.available())
+  {
+    return Serial.read(); // USB
   }
-  if (Serial2.available()) {
-    return Serial2.read();     // XBee
+  if (Serial2.available())
+  {
+    return Serial2.read(); // XBee
   }
   return '\0';
 }
 
-void sendEvent(const char* msg) {
+void sendEvent(const char *msg)
+{
   DEBUG_SERIAL.println(msg);
   RADIO_SERIAL.println(msg);
 }
@@ -86,9 +91,9 @@ void setup()
     ;
 
   Serial1.begin(9600); // gps
-  Serial2.begin(9600);  // xbee
+  Serial2.begin(9600); // xbee
 
-      if (!BARO.begin())
+  if (!BARO.begin())
   {
     Serial.println("ERROR: LPS22HB init failed");
     while (1)
@@ -124,8 +129,13 @@ void setup()
       "MISSION_TIME,PACKET,STATE,ALTITUDE_M,RAW_ALTITUDE_M,PRESSURE_KPA,TEMP_C,"
       "ACCEL_R,ACCEL_P,ACCEL_Y,GYRO_R,GYRO_P,GYRO_Y,"
       "GPS_LAT,GPS_LON,GPS_ALT,GPS_TIME_UTC,GPS_SATS,GPS_FIX");
+  Serial2.println(
+      "MISSION_TIME,PACKET,STATE,ALTITUDE_M,RAW_ALTITUDE_M,PRESSURE_KPA,TEMP_C,"
+      "ACCEL_R,ACCEL_P,ACCEL_Y,GYRO_R,GYRO_P,GYRO_Y,"
+      "GPS_LAT,GPS_LON,GPS_ALT,GPS_TIME_UTC,GPS_SATS,GPS_FIX");
 
   Serial.println("TIME_MS: 0, STATE: LAUNCH_PAD");
+  Serial2.println("TIME_MS: 0, STATE: LAUNCH_PAD");
 }
 
 const char *stateToString(State s)
@@ -153,30 +163,33 @@ const char *stateToString(State s)
 
 void loop()
 {
-while (Serial1.available())
+  // Non-blocking GPS read - limit bytes per loop iteration
+  int gpsReadLimit = 100;
+  while (Serial1.available() && gpsReadLimit-- > 0)
   {
     gps.encode(Serial1.read());
   }
-char cmd = readCommandFromAny();
-if (cmd == '\n' || cmd == '\r') cmd = '\0';
+  char cmd = readCommandFromAny();
+  if (cmd == '\n' || cmd == '\r')
+    cmd = '\0';
 
-if (cmd == 'C' && lastCommand != 'C')
-{
-  telemetryEnabled = true;
-  lastCommand = 'C';
+  if (cmd == 'C' && lastCommand != 'C')
+  {
+    telemetryEnabled = true;
+    lastCommand = 'C';
 
-  Serial.println("CMD_ECHO:CONNECT");
-  Serial2.println("CMD_ECHO:CONNECT");
-}
+    Serial.println("CMD_ECHO:CONNECT");
+    Serial2.println("CMD_ECHO:CONNECT");
+  }
 
-if (cmd == 'D' && lastCommand != 'D' && currentState == LAUNCH_PAD)
-{
-  telemetryEnabled = false;
-  lastCommand = 'D';
+  if (cmd == 'D' && lastCommand != 'D')
+  {
+    telemetryEnabled = false;
+    lastCommand = 'D';
 
-  Serial.println("CMD_ECHO:DISCONNECT");
-  Serial2.println("CMD_ECHO:DISCONNECT");
-}
+    Serial.println("CMD_ECHO:DISCONNECT");
+    Serial2.println("CMD_ECHO:DISCONNECT");
+  }
 
   unsigned long timestamp = millis();
 
@@ -220,19 +233,22 @@ if (cmd == 'D' && lastCommand != 'D' && currentState == LAUNCH_PAD)
       maxAltitude = prevAltitude;
       currentState = APOGEE;
       apogeeCount = 0;
+      apogeeDetectedTime = timestamp;
 
       char buf[120];
-snprintf(buf, sizeof(buf),
-         "MISSION_TIME:%s,TIME_MS:%lu,EVENT:APOGEE_DETECTED,MAX_ALTITUDE:%.1f",
-         missionTimeStr, timestamp, maxAltitude);
-sendEvent(buf);
-
-
+      snprintf(buf, sizeof(buf),
+               "MISSION_TIME:%s,TIME_MS:%lu,EVENT:APOGEE_DETECTED,MAX_ALTITUDE:%.1f",
+               missionTimeStr, timestamp, maxAltitude);
+      sendEvent(buf);
     }
     break;
 
   case APOGEE:
-    currentState = DESCENT;
+    // Hold APOGEE state for 2 seconds to ensure it's captured in telemetry
+    if (timestamp - apogeeDetectedTime >= 2000)
+    {
+      currentState = DESCENT;
+    }
     break;
 
   case DESCENT:
@@ -244,11 +260,10 @@ sendEvent(buf);
       currentState = PAYLOAD_RELEASE;
 
       char buf[120];
-snprintf(buf, sizeof(buf),
-         "MISSION_TIME:%s,TIME_MS:%lu,EVENT:PAYLOAD_RELEASED,ALTITUDE:%.1f,MAX_ALTITUDE:%.1f",
-         missionTimeStr, timestamp, altitudeOut, maxAltitude);
-sendEvent(buf);
-
+      snprintf(buf, sizeof(buf),
+               "MISSION_TIME:%s,TIME_MS:%lu,EVENT:PAYLOAD_RELEASED,ALTITUDE:%.1f,MAX_ALTITUDE:%.1f",
+               missionTimeStr, timestamp, altitudeOut, maxAltitude);
+      sendEvent(buf);
     }
     break;
 
@@ -259,11 +274,10 @@ sendEvent(buf);
       currentState = EGG_RELEASE;
 
       char buf[120];
-snprintf(buf, sizeof(buf),
-         "MISSION_TIME:%s,TIME_MS:%lu,EVENT:EGG_RELEASED,ALTITUDE:%.1f,MAX_ALTITUDE:%.1f",
-         missionTimeStr, timestamp, altitudeOut, maxAltitude);
-sendEvent(buf);
-
+      snprintf(buf, sizeof(buf),
+               "MISSION_TIME:%s,TIME_MS:%lu,EVENT:EGG_RELEASED,ALTITUDE:%.1f,MAX_ALTITUDE:%.1f",
+               missionTimeStr, timestamp, altitudeOut, maxAltitude);
+      sendEvent(buf);
     }
     break;
 
@@ -273,11 +287,10 @@ sendEvent(buf);
       currentState = LANDED;
 
       char buf[120];
-snprintf(buf, sizeof(buf),
-         "MISSION_TIME:%s,TIME_MS:%lu,EVENT:LANDED,ALTITUDE:%.1f",
-         missionTimeStr, timestamp, altitudeOut);
-sendEvent(buf);
-
+      snprintf(buf, sizeof(buf),
+               "MISSION_TIME:%s,TIME_MS:%lu,EVENT:LANDED,ALTITUDE:%.1f",
+               missionTimeStr, timestamp, altitudeOut);
+      sendEvent(buf);
     }
     break;
 
@@ -341,9 +354,10 @@ sendEvent(buf);
             gps.time.second());
 
     strcpy(missionTimeStr, gpsTimeStr);
-  } else{
-      strcpy(missionTimeStr, "NA");
-
+  }
+  else
+  {
+    strcpy(missionTimeStr, "NA");
   }
 
   /* ---------- STATE LOG ---------- */
@@ -511,4 +525,6 @@ sendEvent(buf);
     DEBUG_SERIAL.println("*");
     RADIO_SERIAL.println("*");
   }
+
+  delay(10); // Small delay for stability and power efficiency
 }

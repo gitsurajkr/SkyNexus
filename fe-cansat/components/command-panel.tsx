@@ -27,24 +27,25 @@ export default function CommandPanel({ teamId, onSendCommand }: CommandPanelProp
         <span className="text-xs text-gray-500 ml-2">Team ID: {teamId}</span>
       </div>
 
-      <div className="grid grid-cols-3 gap-4">
-        {/* CX - Telemetry On/Off */}
+      <div className="grid grid-cols-2 gap-4 max-w-2xl">
+        {/* CONNECT - Telemetry On */}
         <div className="p-4 rounded-lg border bg-white border-gray-300 shadow-sm">
-          <h3 className="text-xs font-bold text-gray-700 mb-3">CX - TELEMETRY CONTROL</h3>
+          <h3 className="text-xs font-bold text-gray-700 mb-3">TELEMETRY CONTROL</h3>
           <div className="flex gap-2">
             <button
-              onClick={() => sendCommand(`CMD,${teamId},CX,ON`)}
+              onClick={() => sendCommand('C')}
               className="flex-1 px-4 py-2 rounded-md bg-green-600 text-white hover:bg-green-700 transition-colors text-sm font-semibold"
             >
-              ON
+              CONNECT (C)
             </button>
             <button
-              onClick={() => sendCommand(`CMD,${teamId},CX,OFF`)}
+              onClick={() => sendCommand('D')}
               className="flex-1 px-4 py-2 rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors text-sm font-semibold"
             >
-              OFF
+              DISCONNECT (D)
             </button>
           </div>
+          <p className="text-xs text-gray-500 mt-2">C: Enable telemetry | D: Disable telemetry</p>
         </div>
 
         {/* ST - Set Time */}
@@ -64,14 +65,14 @@ export default function CommandPanel({ teamId, onSendCommand }: CommandPanelProp
             >
               SET
             </button>
-          </div>
+            </div>
           <button
             onClick={() => sendCommand(`CMD,${teamId},ST,GPS`)}
             className="w-full px-4 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-700 transition-colors text-sm font-semibold"
           >
             SET FROM GPS
           </button>
-        </div>
+            </div>
 
         {/* CAL - Calibrate */}
         <div className="p-4 rounded-lg border bg-white border-gray-300 shadow-sm">
@@ -83,7 +84,7 @@ export default function CommandPanel({ teamId, onSendCommand }: CommandPanelProp
             CALIBRATE TO 0m
           </button>
           <p className="text-xs text-gray-500 mt-2">Use when installed on launch pad</p>
-        </div>
+            </div>
 
         {/* SIM - Simulation Mode */}
         <div className="p-4 rounded-lg border bg-white border-gray-300 shadow-sm">
@@ -186,3 +187,4 @@ export default function CommandPanel({ teamId, onSendCommand }: CommandPanelProp
     </div>
   )
 }
+

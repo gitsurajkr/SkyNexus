@@ -2,11 +2,11 @@ import serial
 import time
 import os
 
-# PORT = "COM7"
-# BAUD = 115200
+PORT = "COM7" # arduino
+BAUD = 115200 # arduino
 
-PORT = "COM3"
-BAUD = 9600
+# PORT = "COM3" # xbee
+# BAUD = 9600   # xbee
 
 OUT_FILE = r"C:\Users\kumar\cansat\fe-cansat\public\cansat_telemetry.csv"
 CMD_FILE = r"C:\Users\kumar\cansat\fe-cansat\command.txt"
@@ -24,7 +24,7 @@ CSV_HEADER = (
 )
 
 def log_event(f, event):
-    ts = time.strftime("%H:%M:%S", time.gmtime())
+    ts = time.strftime("%H:%M:%S", time.localtime())
     line = f"EVENT,{ts},{event}"
     f.write(line + "\n")
     f.flush()
@@ -41,17 +41,19 @@ last_packet = None
 lost_packets = 0
 received_packets = 0
 
-with open(OUT_FILE, "w") as f:
-    # Write CSV header
-    f.write(CSV_HEADER)
-    f.flush()
-    print("[INFO] CSV header written")
-    
-    try:
+try:
+    with open(OUT_FILE, "w") as f:
+        # Write CSV header
+        f.write(CSV_HEADER)
+        f.flush()
+        print("[INFO] CSV header written")
+        
         while True:
             if os.path.exists(CMD_FILE):
                 with open(CMD_FILE, "r") as cf:
                     cmd = cf.read().strip()
+                # Delete command file after reading to prevent re-sending
+                os.remove(CMD_FILE)
 
             if cmd in ("C", "D") and cmd != last_cmd:
                 ser.write(cmd.encode())
@@ -74,6 +76,8 @@ with open(OUT_FILE, "w") as f:
 
             # TELEMETRY ONLY
             if not (line.startswith("$") and line.endswith("*")):
+                # Log unrecognized lines for debugging (like startup messages)
+                print(f"[INFO] {line}")
                 continue
 
             csvData = line[1:-1]
@@ -104,20 +108,29 @@ with open(OUT_FILE, "w") as f:
             loss_pct = (lost_packets / (lost_packets + received_packets)) * 100
             print(f"[DATA] {csvData} | Loss {loss_pct:.2f}%")
 
-    except KeyboardInterrupt:
+except KeyboardInterrupt:
+    print("\n[INFO] Shutting down...")
+    with open(OUT_FILE, "a") as f:
         # Send DISCONNECT command
         ser.write(b"D")
         log_event(f, "COMMAND_SENT: DISCONNECT")
 
-        total = received_packets + lost_packets
-        loss_pct = (lost_packets / total) * 100 if total > 0 else 0
+    total = received_packets + lost_packets
+    loss_pct = (lost_packets / total) * 100 if total > 0 else 0
 
-        print("\n----- PACKET LOSS SUMMARY -----")
-        print(f"Received packets : {received_packets}")
-        print(f"Lost packets     : {lost_packets}")
-        print(f"Total packets    : {total}")
-        print(f"Packet loss (%)  : {loss_pct:.2f}%")
-        print("--------------------------------")
+    print("\n----- PACKET LOSS SUMMARY -----")
+    print(f"Received packets : {received_packets}")
+    print(f"Lost packets     : {lost_packets}")
+    print(f"Total packets    : {total}")
+    print(f"Packet loss (%)  : {loss_pct:.2f}%")
+    print("--------------------------------")
 
-ser.close()
-print("[INFO] Serial closed")
+except serial.SerialException as e:
+    print(f"[ERROR] Serial port error: {e}")
+
+except Exception as e:
+    print(f"[ERROR] Unexpected error: {e}")
+
+finally:
+    ser.close()
+    print("[INFO] Serial closed")

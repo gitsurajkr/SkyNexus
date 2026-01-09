@@ -233,7 +233,13 @@ export default function CanSatDashboard() {
           {/* Command Panel */}
           <CommandPanel
             teamId={currentData?.TEAM_ID || 'TEAM_AERIUS_01'}
-            onSendCommand={(command: string) => { void sendCommand(command as 'C' | 'D') }}
+            onSendCommand={(command: string) => {
+              if (command === 'C' || command === 'D') {
+                void sendCommand(command)
+              } else {
+                console.warn('Invalid command:', command)
+              }
+            }}
           />
         </div>
       </div>
