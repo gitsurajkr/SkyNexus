@@ -49,7 +49,7 @@ export default function CommandPanel({ teamId, onSendCommand }: CommandPanelProp
         </div>
 
         {/* ST - Set Time */}
-        <div className="p-4 rounded-lg border bg-white border-gray-300 shadow-sm">
+        < div className="p-4 rounded-lg border bg-white border-gray-300 shadow-sm">
           <h3 className="text-xs font-bold text-gray-700 mb-3">ST - SET TIME</h3>
           <div className="flex gap-2 mb-2">
             <input
@@ -65,14 +65,14 @@ export default function CommandPanel({ teamId, onSendCommand }: CommandPanelProp
             >
               SET
             </button>
-            </div>
+          </div>
           <button
             onClick={() => sendCommand(`CMD,${teamId},ST,GPS`)}
             className="w-full px-4 py-2 rounded-md bg-purple-600 text-white hover:bg-purple-700 transition-colors text-sm font-semibold"
           >
             SET FROM GPS
           </button>
-            </div>
+        </div>
 
         {/* CAL - Calibrate */}
         <div className="p-4 rounded-lg border bg-white border-gray-300 shadow-sm">
@@ -84,7 +84,7 @@ export default function CommandPanel({ teamId, onSendCommand }: CommandPanelProp
             CALIBRATE TO 0m
           </button>
           <p className="text-xs text-gray-500 mt-2">Use when installed on launch pad</p>
-            </div>
+        </div>
 
         {/* SIM - Simulation Mode */}
         <div className="p-4 rounded-lg border bg-white border-gray-300 shadow-sm">
